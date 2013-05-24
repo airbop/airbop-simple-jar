@@ -3,10 +3,20 @@ airbop-simple-jar
 
 This is a simple jar to make adding airbop to your app much easier.
 
+To build the jar if you want:
+cd into: airbop-simple-jar/src
+
+    >android update project -p .
+    >ant jar
+
+airbop.jar will be built in:
+
+    airbop-simple-jar\src\bin
+
 All right I got the jar sort of working. You need to include:
 
-airbop.jar
-gcm.jar
+    airbop.jar
+    gcm.jar
 
 Add the following to your manifest:
 
