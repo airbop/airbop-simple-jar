@@ -1,5 +1,7 @@
-airbop-simple-jar
+airbop-simple-jar ALPHA
 =================
+
+WARNING: This is in the ALPHA stage so use at your own risk. There will be bugs.
 
 This is a simple jar to make adding airbop to your app much easier.
 
