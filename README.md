@@ -22,7 +22,7 @@ All right I got the jar sort of working. You need to include:
 
 Add the following to your manifest:
 
- <!--  AirBop META DATA -->
+     <!--  AirBop META DATA -->
     	<meta-data android:name="AIRBOP_GOOGLE_PROJECT_NUMBER" android:value="@string/gpn" />
     	<meta-data android:name="AIRBOP_APP_KEY" android:value="<<YOUR_AIRBOP_APP_KEY>>" />
     	<meta-data android:name="AIRBOP_APP_SECRET" android:value="<<YOUR_AIRBOP_APP_SECRET>>" />
