@@ -18,6 +18,7 @@ package com.airbop.library.simple;
 
 //import static com.airbop.library.simple.CommonUtilities.GOOGLE_PROJECT_NUMBER;
 import static com.airbop.library.simple.CommonUtilities.displayMessage;
+import static com.airbop.library.simple.CommonUtilities.onGCMMessage;
 
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.NotificationCompat;
@@ -120,27 +121,33 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
 	    if (intent != null) {      	
 	    	//Check the bundle for the pay load body and title
 	        Bundle bundle = intent.getExtras();
-	 	   	if (bundle != null) {
-	 	   		displayMessage(context, "Message bundle: " +  bundle);
-	 	   		
-	 	   		Log.i(TAG, "Message bundle: " +  bundle);
-	 	   		message = bundle.getString("message");   			 	   		
-	 	   		title = bundle.getString("title");	
-	 	   		url = bundle.getString("url");	 	   		
-	 	   		image_url = bundle.getString("image_url");
-	 	   		large_icon = bundle.getString("large_icon");
-	 	   	} 
+	        AirBopManifestSettings airBop_settings = CommonUtilities.loadDataFromManifest(context);
+			if (airBop_settings.mDefaultNotificationHandling) {
+		 	   	if (bundle != null) {
+		 	   		displayMessage(context, "Message bundle: " +  bundle);
+		 	   		Log.i(TAG, "Message bundle: " +  bundle);
+		 	   		message = bundle.getString("message");   			 	   		
+		 	   		title = bundle.getString("title");	
+		 	   		url = bundle.getString("url");	 	   		
+		 	   		image_url = bundle.getString("image_url");
+		 	   		large_icon = bundle.getString("large_icon");
+		 	   		
+		 	   		// If there was no body just use a standard message
+		 		   	if (message == null) {
+		 		   		message = AirBopStrings.airbop_message;
+		 			}
+		 		   	
+		 		   	if (image_url != null) {
+		 		   		generateImageNotification(context, title, message, url, image_url, large_icon); 	
+		 		   	} else {
+		 		   		generateNotification(context, title, message, url, large_icon);
+		 		   	}
+		 	   	} 
+			} else {
+				onGCMMessage(context, bundle);
+			}
 	    }
-	   	// If there was no body just use a standard message
-	   	if (message == null) {
-	   		message = AirBopStrings.airbop_message;
-		}
 	   	
-	   	if (image_url != null) {
-	   		generateImageNotification(context, title, message, url, image_url, large_icon); 	
-	   	} else {
-	   		generateNotification(context, title, message, url, large_icon);
-	   	}
 	}
 
 	@Override

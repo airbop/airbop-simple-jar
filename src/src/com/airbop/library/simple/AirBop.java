@@ -2,11 +2,13 @@ package com.airbop.library.simple;
 
 import static com.airbop.library.simple.CommonUtilities.SERVER_URL;
 import static com.airbop.library.simple.CommonUtilities.USE_SERVICE;
+import static com.airbop.library.simple.CommonUtilities.GCM_MESSAGE_ACTION;
+import static com.airbop.library.simple.CommonUtilities.DISPLAY_MESSAGE_ACTION;
 import static com.airbop.library.simple.CommonUtilities.displayMessage;
 
 import java.lang.ref.WeakReference;
 
-import com.airbop.library.simple.AirBopRegisterTask.RegTaskCompleteListener;
+import android.support.v4.content.LocalBroadcastManager;
 import com.airbop.library.simple.CommonUtilities.AirBopManifestSettings;
 import com.airbop.library.simple.CommonUtilities.AirBopStrings;
 import com.google.android.gcm.GCMRegistrar;
@@ -56,6 +58,40 @@ public class AirBop implements AirBopRegisterTask.RegTaskCompleteListener, Locat
 			application_context = mAppContext.get();
 		}
 		return application_context;
+	}
+	
+	public static void registerAirBopMessageReceiver(Context application_context
+			, BroadcastReceiver gcm_receiver) {
+		LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(application_context);
+        if (lbm != null) {
+        	lbm.registerReceiver(gcm_receiver
+        			, new IntentFilter(GCM_MESSAGE_ACTION));
+        }
+	}
+	
+	public static void registerAirBopLogReceiver(Context application_context
+			, BroadcastReceiver log_receiver) {
+		LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(application_context);
+        if (lbm != null) {
+        	lbm.registerReceiver(log_receiver
+        			, new IntentFilter(DISPLAY_MESSAGE_ACTION));
+        }
+	}
+	
+	public static void unregisterAirBopMessageReceiver(Context application_context
+			, BroadcastReceiver gcm_receiver) {
+		LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(application_context);
+        if (lbm != null) {
+        	lbm.unregisterReceiver(gcm_receiver);
+        }
+	}
+	
+	public static void unregisterAirBopLogReceiver(Context application_context
+			, BroadcastReceiver log_receiver) {
+		LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(application_context);
+        if (lbm != null) {
+        	lbm.unregisterReceiver(log_receiver);
+        }
 	}
 	
 	public void register(Context application_context) {

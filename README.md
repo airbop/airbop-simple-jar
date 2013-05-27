@@ -57,3 +57,40 @@ and:
     AirBop mAirBop = new AirBop();
     mAirBop.unRegister(getApplicationContext());
     
+## Custom Message Handling
+
+You can let the simple JAR handle all of the messaging and notification for you, or you block the default handling and do everything manually. Here is how you do it:
+
+*    Block the default message handling via the Android.xml manifest file:
+ 
+         <meta-data android:name="AIRBOP_DEFAULT_NOTIFICATION_HANDLING" android:value="false"/>
+         
+*    Create a `BroadcastReceiver` that will handle the message sent from the AirBop servers. E.g.:
+
+            public class DemoAirBopMessageReceiver extends BroadcastReceiver {
+            	 private static final String TAG = "DemoAirBopMessageReceiver";
+            	@Override
+            	public void onReceive(Context context, Intent intent) {
+            		
+            		Log.v(TAG, "onReceive");
+            		if (intent != null) {  
+               		 Intent i =  new Intent(context, DemoActivity.class);
+               		 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+               		 
+            	    	//Check the bundle for the pay load body and title
+            	        Bundle bundle = intent.getExtras();
+            	        i.putExtras(bundle);
+            	        context.startActivity(i);
+            	    }
+            	}
+            }
+
+*    Register your receiver with AirBop's jar to receive notifications in your manifest:
+
+            <receiver android:name=".DemoAirBopMessageReceiver">
+            		<intent-filter>
+            				<action android:name="com.airbop.library.simple.GCM_MESSAGE" />
+            		</intent-filter>
+            </receiver>
+
+*    That's it.

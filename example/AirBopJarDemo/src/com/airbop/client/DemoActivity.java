@@ -18,6 +18,8 @@ package com.airbop.client;
 
 import static com.airbop.library.simple.CommonUtilities.DISPLAY_MESSAGE_ACTION;
 import static com.airbop.library.simple.CommonUtilities.EXTRA_MESSAGE;
+//import static com.airbop.library.simple.CommonUtilities.displayMessage;
+
 //import static com.airbop.library.simple.CommonUtilities.USE_LOCATION;
 
 //import com.airbop.library.simple.AirBopActivity;
@@ -32,10 +34,13 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+
 
 /**
  * Main UI for the demo app.
@@ -44,7 +49,9 @@ public class DemoActivity extends Activity {
 
     TextView mDisplay;
     AirBop mAirBop = new AirBop();
-    //private static final String TAG = "DemoActivity";
+    private static final String TAG = "DemoActivity";
+    
+    DemoAirBopMessageReceiver mHandleAirBopMessageReceiver = new DemoAirBopMessageReceiver();
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,9 +59,24 @@ public class DemoActivity extends Activity {
                 
         setContentView(R.layout.main);
         mDisplay = (TextView) findViewById(R.id.display);
-        registerReceiver(mHandleMessageReceiver,
-                new IntentFilter(DISPLAY_MESSAGE_ACTION));
+        //registerReceiver(mHandleMessageReceiver,
+        //        new IntentFilter(DISPLAY_MESSAGE_ACTION));
        
+        //registerReceiver(mHandleMessageReceiver,
+        //        new IntentFilter(DISPLAY_MESSAGE_ACTION));
+        
+        //AirBop.registerAirBopMessageReceiver(this, mHandleAirBopMessageReceiver);
+        AirBop.registerAirBopLogReceiver(this, mHandleLogMessageReceiver);
+        
+        if (savedInstanceState != null) {
+ 	   		//Display the standard AirBop Bundle details
+        	mDisplay.append("message: " + savedInstanceState.getString("message")+ "\n");   			 	   		
+        	mDisplay.append("title: " + savedInstanceState.getString("title")+ "\n");	
+        	mDisplay.append("url: " + savedInstanceState.getString("url")+ "\n"); 	   		
+        	mDisplay.append("image_url: " + savedInstanceState.getString("image_url")+ "\n");
+        	mDisplay.append("large_icon: " + savedInstanceState.getString("large_icon")+ "\n");	
+ 	   	}
+        
         // Call the register function in the AirBopActivity 
         register();  
     }
@@ -107,12 +129,14 @@ public class DemoActivity extends Activity {
     @Override
     protected void onDestroy() {
         
-        unregisterReceiver(mHandleMessageReceiver);
+        //unregisterReceiver(mHandleMessageReceiver);
+    	//AirBop.unregisterAirBopMessageReceiver(this, mHandleAirBopMessageReceiver);
+    	AirBop.unregisterAirBopLogReceiver(this, mHandleLogMessageReceiver);
         super.onDestroy();
     }
 
     
-    private final BroadcastReceiver mHandleMessageReceiver =
+    private final BroadcastReceiver mHandleLogMessageReceiver =
             new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -120,5 +144,6 @@ public class DemoActivity extends Activity {
             mDisplay.append(newMessage + "\n");
         }
     };
-
+    
+    
 }

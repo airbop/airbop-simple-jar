@@ -19,11 +19,14 @@ package com.airbop.library.simple;
 
 //import static com.airbop.library.simple.CommonUtilities.displayMessage;
 
+import static com.airbop.library.simple.CommonUtilities.GCM_MESSAGE_ACTION;
+
 import java.util.Set;
 
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -32,6 +35,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 /**
@@ -82,6 +86,13 @@ public final class CommonUtilities {
      */
     public static final String DISPLAY_MESSAGE_ACTION =
             "com.airbop.library.simple.DISPLAY_MESSAGE";
+    
+    
+    /**
+     * Intent used for GCM callback message in the screen.
+     */
+    public static final String GCM_MESSAGE_ACTION =
+            "com.airbop.library.simple.GCM_MESSAGE";
 
     /**
      * Intent's extra that contains the message to be displayed.
@@ -97,10 +108,25 @@ public final class CommonUtilities {
      * @param context application's context.
      * @param message message to be displayed.
      */
-    static void displayMessage(Context context, String message) {
-        Intent intent = new Intent(DISPLAY_MESSAGE_ACTION);
+    public static void displayMessage(Context context, String message) {
+    	Intent intent = new Intent(DISPLAY_MESSAGE_ACTION);
         intent.putExtra(EXTRA_MESSAGE, message);
-        context.sendBroadcast(intent);
+        sendLocalBroadcast(context, intent);
+        //context.sendBroadcast(intent);       
+    }
+    
+    static void onGCMMessage(Context context, Bundle bundle) {
+    	Intent intent = new Intent(GCM_MESSAGE_ACTION);
+    	intent.putExtras(bundle);
+    	//sendLocalBroadcast(context, intent);
+    	context.sendBroadcast(intent);       
+    }
+    
+    static void sendLocalBroadcast(Context context,Intent intent) {
+    	 LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(context);
+         if ((lbm != null) && (intent != null)) {
+         	lbm.sendBroadcast(intent);
+         }
     }
     
     static void displayMessageFromIntent(Context context, Intent intent) {
@@ -207,6 +233,7 @@ public final class CommonUtilities {
     	public String mDefaultNotificationTitle = "";
     	public int mNotificationIcon = 0;
     	public String mDefaultNotificationClass = "";
+    	public boolean mDefaultNotificationHandling = true;
     }
     
     static final String AIRBOP_GOOGLE_PROJECT_NUMBER = "AIRBOP_GOOGLE_PROJECT_NUMBER";
@@ -216,6 +243,8 @@ public final class CommonUtilities {
 	static final String AIRBOP_DEFAULT_NOTIFICATION_TITLE = "AIRBOP_DEFAULT_NOTIFICATION_TITLE";
 	static final String AIRBOP_NOTIFICATION_ICON = "AIRBOP_NOTIFICATION_ICON";
 	static final String AIRBOP_DEFAULT_NOTIFICATION_CLASS = "AIRBOP_DEFAULT_NOTIFICATION_CLASS";
+	static final String AIRBOP_DEFAULT_NOTIFICATION_HANDLING = "AIRBOP_DEFAULT_NOTIFICATION_HANDLING";
+	
 	
     public static AirBopManifestSettings loadDataFromManifest(Context application_context) {
     	AirBopManifestSettings airbop_settings = new AirBopManifestSettings();
@@ -265,6 +294,9 @@ public final class CommonUtilities {
 								app_bundle.getString(AIRBOP_DEFAULT_NOTIFICATION_CLASS);
 							Log.v(TAG, "mDefaultNotificationClass: " + airbop_settings.mDefaultNotificationClass);
 							
+							airbop_settings.mDefaultNotificationHandling = 
+								app_bundle.getBoolean(AIRBOP_DEFAULT_NOTIFICATION_HANDLING, true);
+							Log.v(TAG, "mDefaultNotificationHandling: " + airbop_settings.mDefaultNotificationHandling);
 						}						
 					}
 				}
