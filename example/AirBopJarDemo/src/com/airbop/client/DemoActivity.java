@@ -79,7 +79,7 @@ public class DemoActivity extends Activity {
         
         // Call the register function in the AirBopActivity 
         register();  
-    }
+    } 
     
     private void register() {
     	mAirBop.register(getApplicationContext());

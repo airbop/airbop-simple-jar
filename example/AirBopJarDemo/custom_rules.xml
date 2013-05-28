@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="AirBopSimpleJarDemo-CustomRules" default="help">
+
+  <target name="-pre-build">  
+		<echo message=" Pre-build in the custom rules"/>
+        <ant antfile = "../../src/build.xml" 
+			target = "jar"
+			useNativeBasedir="true"/>  
+        
+    </target>  
+</project>

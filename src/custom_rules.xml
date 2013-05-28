@@ -4,10 +4,13 @@
   <!-- A rule to generate the JAR for inclusion in an Android
        application. Output file will be bin/volley.jar -->
   <target name="jar" depends="-compile">
-    <jar destfile="bin/airbop.jar"
-         basedir="bin/classes" />
+    <echo message="Building the jar" />
+    <jar destfile="./bin/airbop.jar"
+         basedir="./bin/classes" />
          <!--Copy the file into the example project as well -->
-     <copy file="bin/airbop.jar" todir="../example/AirBopJarDemo/libs/"
+     <copy file="./bin/airbop.jar" todir="../example/AirBopJarDemo/libs/"
+		overwrite="true"/>
+	<copy file="./bin/airbop.jar" todir="../jars/"
 		overwrite="true"/>
   </target>
 </project>
