@@ -66,8 +66,8 @@
         
          <!--  AirBop META DATA -->
     	<meta-data android:name="AIRBOP_GOOGLE_PROJECT_NUMBER" android:value="@string/gpn" />
-    	<meta-data android:name="AIRBOP_APP_KEY" android:value="7b483fb1-cc4c-4bab-b36c-5019424423d5" />
-    	<meta-data android:name="AIRBOP_APP_SECRET" android:value="8c52db2822ca2f5579a71f5c64d29c68c1fca8927cc83c9f9bfe5478e56d1412" />
+    	<meta-data android:name="AIRBOP_APP_KEY" android:value="<<YOUR_KEY>>" />
+    	<meta-data android:name="AIRBOP_APP_SECRET" android:value="<<YOUR_SECRET>>" />
         <meta-data android:name="AIRBOP_USE_LOCATION" android:value="false" />
         <meta-data android:name="AIRBOP_DEFAULT_NOTIFICATION_TITLE" android:value="AirBop Client" />
         <meta-data android:name="AIRBOP_NOTIFICATION_ICON" android:resource="@drawable/ic_stat_gcm"/>
@@ -82,7 +82,6 @@
             android:theme="@style/AirBop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

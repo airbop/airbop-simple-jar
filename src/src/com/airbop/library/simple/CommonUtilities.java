@@ -118,6 +118,9 @@ public final class CommonUtilities {
     static void onGCMMessage(Context context, Bundle bundle) {
     	Intent intent = new Intent(GCM_MESSAGE_ACTION);
     	intent.putExtras(bundle);
+		String packageName = context.getPackageName();
+		intent.setPackage(packageName);
+
     	//sendLocalBroadcast(context, intent);
     	context.sendBroadcast(intent);       
     }
@@ -285,7 +288,9 @@ public final class CommonUtilities {
 							airbop_settings.mDefaultNotificationTitle= 
 								app_bundle.getString(AIRBOP_DEFAULT_NOTIFICATION_TITLE);
 							Log.v(TAG, "mDefaultNotificationTitle: " + airbop_settings.mDefaultNotificationTitle);
-							
+							if (airbop_settings.mDefaultNotificationTitle == null){
+								airbop_settings.mDefaultNotificationTitle = "";
+							}
 							airbop_settings.mNotificationIcon= 
 								app_bundle.getInt(AIRBOP_NOTIFICATION_ICON);
 							Log.v(TAG, "mNotificationIcon: " + airbop_settings.mNotificationIcon);

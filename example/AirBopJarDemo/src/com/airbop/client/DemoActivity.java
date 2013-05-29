@@ -68,15 +68,19 @@ public class DemoActivity extends Activity {
         //AirBop.registerAirBopMessageReceiver(this, mHandleAirBopMessageReceiver);
         AirBop.registerAirBopLogReceiver(this, mHandleLogMessageReceiver);
         
-        if (savedInstanceState != null) {
- 	   		//Display the standard AirBop Bundle details
-        	mDisplay.append("message: " + savedInstanceState.getString("message")+ "\n");   			 	   		
-        	mDisplay.append("title: " + savedInstanceState.getString("title")+ "\n");	
-        	mDisplay.append("url: " + savedInstanceState.getString("url")+ "\n"); 	   		
-        	mDisplay.append("image_url: " + savedInstanceState.getString("image_url")+ "\n");
-        	mDisplay.append("large_icon: " + savedInstanceState.getString("large_icon")+ "\n");	
- 	   	}
-        
+        Intent intent = getIntent();
+        if (intent != null) {
+        	Bundle bundle = intent.getExtras();
+        	if (bundle != null) {
+	 	   		//Display the standard AirBop Bundle details
+	        	mDisplay.append("message: " + bundle.getString("message")+ "\n");   			 	   		
+	        	mDisplay.append("title: " + bundle.getString("title")+ "\n");	
+	        	mDisplay.append("url: " + bundle.getString("url")+ "\n"); 	   		
+	        	mDisplay.append("image_url: " + bundle.getString("image_url")+ "\n");
+	        	mDisplay.append("large_icon: " + bundle.getString("large_icon")+ "\n");	
+ 	   	
+        	}
+        }
         // Call the register function in the AirBopActivity 
         register();  
     } 
