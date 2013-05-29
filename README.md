@@ -7,13 +7,13 @@ This is a simple jar to make adding airbop to your app much easier.
 
 ## How to add the simple JAR to your app
 
-### Get the JARS that you need
+1. ### Get the JARS that you need
 
 In order to use the AirBop simple jar you need to add the airbop.jar and gcm.jar to you app. These two jars can be found in the jars folder of our [GitHub repository](https://github.com/indigorose/airbop-simple-jar/tree/master/jars).
 
 Download both of the jars and then put them in the `libs` folder of your project.
 
- - ### Add the GCM requirements to your Android.xml manifest
+2. ### Add the GCM requirements to your Android.xml manifest
 
 Next you need to add the requirements to your manifest file. This is described in detail in the [Adding AirBop to Your App](http://airbop.com/tutorials/adding-airbop-to-your-app) tutorial, but in a nutshell the following needs to be added and PACKAGE needs to be replaced with your applications package:
 
@@ -88,7 +88,7 @@ You will notice if you have worked with GCM ir AirBop without using the simple J
                 
 These lines tell GCM to use the airbop.jar for some of the basic GCM task, rather then looking for the hooks within your app.
 
- - ### Add the AirBop simple jar meta-data to your Android.xml manifest
+3. ### Add the AirBop simple jar meta-data to your Android.xml manifest
 
 The next step is to add all of the data that the simple jar needs to your manifext. This will be added within the `manifest\application`
 
@@ -126,14 +126,14 @@ Here are the items in greater detail:
 
 * `AIRBOP_DEFAULT_NOTIFICATION_HANDLING` Whether or not the airbop.jar should handle the notification creation. This defaults to true. If false no notificaiton will be displayed when a message from AirBop is received. You wull have to create your own handler to perform any actions. More information on this can be found in the *Custom Message Handling* section.
    
- - ### Register with AirBop and GCM
+4. ### Register with AirBop and GCM
   
 The next step is to register with GCM. A good place to do this would be in the `onCreate()` method of your main activity:
 
     AirBop mAirBop = new AirBop();
     mAirBop.register(getApplicationContext());
         
- - ### Unregister with AirBop and GCM
+### 4. Unregister with AirBop and GCM
 
 Finally you should allow people to opt-out of your notification, if that event you will need to call the following code:
 
