@@ -13,7 +13,7 @@ In order to use the AirBop simple jar you need to add the airbop.jar and gcm.jar
 
 Download both of the jars and then put them in the `libs` folder of your project.
 
-### Add the GCM requirements to your Android.xml manifest
+ - ### Add the GCM requirements to your Android.xml manifest
 
 Next you need to add the requirements to your manifest file. This is described in detail in the [Adding AirBop to Your App](http://airbop.com/tutorials/adding-airbop-to-your-app) tutorial, but in a nutshell the following needs to be added and PACKAGE needs to be replaced with your applications package:
 
@@ -88,7 +88,7 @@ You will notice if you have worked with GCM ir AirBop without using the simple J
                 
 These lines tell GCM to use the airbop.jar for some of the basic GCM task, rather then looking for the hooks within your app.
 
-### Add the AirBop simple jar meta-data to your Android.xml manifest
+ - ### Add the AirBop simple jar meta-data to your Android.xml manifest
 
 The next step is to add all of the data that the simple jar needs to your manifext. This will be added within the `manifest\application`
 
@@ -118,29 +118,29 @@ Here are the items in greater detail:
     	
 * `AIRBOP_DEFAULT_NOTIFICATION_TITLE` Controls the default title for notifications if none is passed in within the messaage. This is optional and will default to a blank string.
 
-* AIRBOP_NOTIFICATION_ICON` This is the resource id of the icon that will be used in the notification.
+* `AIRBOP_NOTIFICATION_ICON` This is the resource id of the icon that will be used in the notification.
 
-* AIRBOP_DEFAULT_NOTIFICATION_CLASS` If no URL is specificed this is the activity that will be shown when the end-user clicks on the notification. E.g:
+* `AIRBOP_DEFAULT_NOTIFICATION_CLASS` If no URL is specificed this is the activity that will be shown when the end-user clicks on the notification. E.g:
 
         <meta-data android:name="AIRBOP_DEFAULT_NOTIFICATION_CLASS" android:value="com.airbop.client.DemoActivity"/>
 
-* AIRBOP_DEFAULT_NOTIFICATION_HANDLING` Whether or not the airbop.jar should handle the notification creation. This defaults to true. If false no notificaiton will be displayed when a message from AirBop is received. You wull have to create your own handler to perform any actions. More information on this can be found in the *Custom Message Handling* section.
+* `AIRBOP_DEFAULT_NOTIFICATION_HANDLING` Whether or not the airbop.jar should handle the notification creation. This defaults to true. If false no notificaiton will be displayed when a message from AirBop is received. You wull have to create your own handler to perform any actions. More information on this can be found in the *Custom Message Handling* section.
    
-### Register with AirBop and GCM
+ - ### Register with AirBop and GCM
   
 The next step is to register with GCM. A good place to do this would be in the `onCreate()` method of your main activity:
 
     AirBop mAirBop = new AirBop();
     mAirBop.register(getApplicationContext());
         
-### Unregister with AirBop and GCM
+ - ### Unregister with AirBop and GCM
 
 Finally you should allow people to opt-out of your notification, if that event you will need to call the following code:
 
     AirBop mAirBop = new AirBop();
     mAirBop.unRegister(getApplicationContext());
     
-### See the sample for more information
+ - ### See the sample for more information
 
 If you are confused at all please see the sample location within the `example/AirBopJarDemo` diurectory of our github repository. It is a working example of how to use the airbop.jar.
 
