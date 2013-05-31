@@ -1,9 +1,9 @@
-airbop-simple-jar ALPHA
+AirBop-simple-jar ALPHA
 =================
 
 WARNING: This is in the ALPHA stage so use at your own risk. There will be bugs.
 
-This is a simple jar to make adding airbop to your app much easier.
+This is a simple jar to make adding AirBop to your app much easier.
 
 ## How to add the simple JAR to your app
 
@@ -80,17 +80,17 @@ Next you need to add the requirements to your manifest file. This is described i
                 <service android:name="com.airbop.library.simple.AirBopGCMIntentService" />
                 <service android:name="com.airbop.library.simple.AirBopIntentService"></service>
                 
-You will notice if you have worked with GCM ir AirBop without using the simple JAR that there are three lines that are specific to the simple jar:
+You will notice if you have worked with GCM or AirBop without using the simple JAR that there are three lines that are specific to the simple jar:
 
                     android:name="com.airbop.library.simple.AirBopGCMBroadcastReceiver"
                 <service android:name="com.airbop.library.simple.AirBopGCMIntentService" />
                 <service android:name="com.airbop.library.simple.AirBopIntentService"></service>
                 
-These lines tell GCM to use the airbop.jar for some of the basic GCM task, rather then looking for the hooks within your app.
+These lines tell GCM to use the airbop.jar for some of the basic GCM task, rather than looking for the hooks within your app.
 
 ### 3. Add the AirBop simple jar meta-data to your Android.xml manifest
 
-The next step is to add all of the data that the simple jar needs to your manifext. This will be added within the `manifest\application`
+The next step is to add all of the data that the simple jar needs to your manifest. This will be added within the `manifest\application`
 
     <!--  AirBop META DATA -->
     <meta-data android:name="AIRBOP_GOOGLE_PROJECT_NUMBER" android:value="@string/gpn" />
@@ -103,7 +103,7 @@ The next step is to add all of the data that the simple jar needs to your manife
     
 Here are the items in greater detail:
 
-* `AIRBOP_GOOGLE_PROJECT_NUMBER` - Your Goolge Project Number. This should be a string resource, and within the string resource you should specifiy the actual number. e.g.
+* `AIRBOP_GOOGLE_PROJECT_NUMBER` - Your Google Project Number. This should be a string resource, and within the string resource you should specify the actual number. e.g.
 
         <string name="gpn">##########</string>
         
@@ -111,20 +111,20 @@ Here are the items in greater detail:
 
 * `AIRBOP_APP_SECRET` = Your AirBop app secret, found in your airbop.com account.
 
-* `AIRBOP_USE_LOCATION` value controls whether or not you want the users location data sent to Airbop. The default is false. If you set this to false AirBop will look up the devices location based on IP. If you set this to "true" the following permissions must be added to you manifest as well:
+* `AIRBOP_USE_LOCATION` value controls whether or not you want the users location data sent to AirBop. The default is false. If you set this to false AirBop will look up the devices location based on IP. If you set this to "true" the following permissions must be added to you manifest as well:
 
     	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> 
     	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> 
     	
-* `AIRBOP_DEFAULT_NOTIFICATION_TITLE` Controls the default title for notifications if none is passed in within the messaage. This is optional and will default to a blank string.
+* `AIRBOP_DEFAULT_NOTIFICATION_TITLE` Controls the default title for notifications if none is passed in within the message. This is optional and will default to a blank string.
 
 * `AIRBOP_NOTIFICATION_ICON` This is the resource id of the icon that will be used in the notification.
 
-* `AIRBOP_DEFAULT_NOTIFICATION_CLASS` If no URL is specificed this is the activity that will be shown when the end-user clicks on the notification. E.g:
+* `AIRBOP_DEFAULT_NOTIFICATION_CLASS` If no URL is specified this is the activity that will be shown when the end-user clicks on the notification. E.g.:
 
         <meta-data android:name="AIRBOP_DEFAULT_NOTIFICATION_CLASS" android:value="com.airbop.client.DemoActivity"/>
 
-* `AIRBOP_DEFAULT_NOTIFICATION_HANDLING` Whether or not the airbop.jar should handle the notification creation. This defaults to true. If false no notificaiton will be displayed when a message from AirBop is received. You wull have to create your own handler to perform any actions. More information on this can be found in the *Custom Message Handling* section.
+* `AIRBOP_DEFAULT_NOTIFICATION_HANDLING` Whether or not the airbop.jar should handle the notification creation. This defaults to true. If false no notification will be displayed when a message from AirBop is received. You will have to create your own handler to perform any actions. More information on this can be found in the *Custom Message Handling* section.
    
 ### 4. Register with AirBop and GCM
   
@@ -140,9 +140,16 @@ Finally you should allow people to opt-out of your notification, if that event y
     AirBop mAirBop = new AirBop();
     mAirBop.unRegister(getApplicationContext());
     
-### 6. See the sample for more information
+### 6. Add the jar to your Proguard setup
 
-If you are confused at all please see the sample location within the `example/AirBopJarDemo` diurectory of our github repository. It is a working example of how to use the airbop.jar.
+If you are proguarding your App (and you should be) add the following to your configuration file:
+
+    -libraryjars .\libs\airbop.jar
+    -keep class com.airbop.library.** { *; }
+    
+### 7. See the sample for more information
+
+If you are confused at all please see the sample location within the `example/AirBopJarDemo` directory of our GitHub repository. It is a working example of how to use the airbop.jar.
 
 ## Custom Message Handling
 
@@ -184,18 +191,18 @@ You can let the simple JAR handle all of the messaging and notification for you,
 
 ### Building the jar from source.
 
-If you want to modify the jar and recompile it feel free. Grab the source from our [github repository](https://github.com/indigorose/airbop-simple-jar/tree/master/jars) and have fun with it. 
+If you want to modify the jar and recompile it feel free. Grab the source from our [GitHub repository](https://github.com/indigorose/airbop-simple-jar/tree/master/jars) and have fun with it. 
 
 If you are fixing a bug in the 
 
 To build the jar if you want:
 
-cd into: airbop-simple-jar/src
+cd into: AirBop-simple-jar/src
 
     >android update project -p .
     >ant jar
 
-airbop.jar will be built intp:
+airbop.jar will be built into:
 
-    airbop-simple-jar\src\bin
+    AirBop-simple-jar\src\bin
 
