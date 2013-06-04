@@ -193,7 +193,7 @@ You can let the simple JAR handle all of the messaging and notification for you,
 
 *    That's it.
 
-### Gettind debug information
+### Getting debug information
 
 If you want to have access to the error and status messages created by the simple jar you will need to register a BroadcastReceiver with the jar, and then process the message in `OnReceive`. This is a rather simple procedure that can be done from your main activity:
 
