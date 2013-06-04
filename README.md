@@ -1,7 +1,7 @@
-AirBop-simple-jar ALPHA
+AirBop-simple-jar BETA
 =================
 
-WARNING: This is in the ALPHA stage so use at your own risk. There will be bugs.
+WARNING: This is in the BETA stage so use at your own risk. There will be bugs.
 
 This is a simple jar to make adding AirBop to your app much easier.
 
