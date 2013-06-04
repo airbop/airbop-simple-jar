@@ -43,7 +43,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 //import android.os.Build;
-import android.util.Log;
+//import android.util.Log;
 import android.util.Pair;
 
 import java.net.HttpURLConnection;
@@ -217,7 +217,7 @@ public class AirBopServerUtilities {
 	    	
 	    	if(prefs != null) {
 	    		mLabel = prefs.getString(LABEL, null);
-	    		Log.v(TAG, "loadDataFromPrefs label: " + mLabel);
+	    		//Log.v(TAG, "loadDataFromPrefs label: " + mLabel);
 	    		
 	    		if (airBop_settings.mUseLocation) {
 		    		String latitude = prefs.getString(LATITUDE, null);
@@ -265,7 +265,8 @@ public class AirBopServerUtilities {
 	    		Editor editor = prefs.edit();
 	    		AirBopManifestSettings airBop_settings = CommonUtilities.loadDataFromManifest(context);
 				
-	    		if (airBop_settings.mUseLocation) {
+	    		if ((airBop_settings.mUseLocation)
+	    				&& (mLocation != null)){
 	    			
 	    			editor.putString(LATITUDE, Double.toString(mLocation.getLatitude()));
 	    			editor.putString(LONGITUDE, Double.toString(mLocation.getLongitude()));
@@ -555,7 +556,7 @@ public class AirBopServerUtilities {
 			e.printStackTrace();
 		}
 		
-		Log.v(TAG, "Posting '" + body + "' to " + url);
+		//Log.v(TAG, "Posting '" + body + "' to " + url);
         
         byte[] bytes = body.getBytes();
         
@@ -581,7 +582,7 @@ public class AirBopServerUtilities {
             conn.addRequestProperty(HEADER_APP, airbop_appkey);
             conn.addRequestProperty(HEADER_SIGNATURE, signature_hash);
             
-            Log.i(TAG, "About to post");
+            //Log.i(TAG, "About to post");
            
             // post the request
             OutputStream out = conn.getOutputStream();
@@ -618,7 +619,7 @@ public class AirBopServerUtilities {
 			return false;
 		}
 		AirBopManifestSettings airBop_settings = CommonUtilities.loadDataFromManifest(context);
-		Log.i(TAG, "registering device (regId = " + server_data.mRegId + ")");
+		displayMessage(context, "registering device (regId = " + server_data.mRegId + ")");
 		
 		String serverUrl = SERVER_URL + "register";
 		
@@ -627,7 +628,7 @@ public class AirBopServerUtilities {
 		// demo server. As the server might be down, we will retry it a couple
 		// times.
 		for (int i = 1; i <= MAX_ATTEMPTS; i++) {
-		    Log.d(TAG, "Attempt #" + i + " to register");
+		    //Log.d(TAG, "Attempt #" + i + " to register");
 		    try {
 		        displayMessage(context, String.format(
 		        		AirBopStrings.airbop_server_registering
@@ -652,7 +653,7 @@ public class AirBopServerUtilities {
 		    catch (AirBopException airbop_e) {
 		        
 		    	String error_msg = airbop_e.getMessage();
-		    	Log.i(TAG, "Error message:  " + error_msg);
+		    	//displayMessage(context, "Error message:  " + error_msg);
 		    	int error_code = airbop_e.getHTTPResponseCode();
 		    	
 		    	            	
@@ -672,16 +673,16 @@ public class AirBopServerUtilities {
 		        	// Here we are retrying on any error code that is not a 4XX 
 		        	// error code. This will most probably be a 5XX error code meaning
 		        	// thtat the problem was temporary.
-		            Log.e(TAG, "Failed to register on attempt " + i, airbop_e);
+		        	displayMessage(context, "Failed to register on attempt: " + i + " " + airbop_e);
 		            if (i == MAX_ATTEMPTS) {
 		                break;
 		            }
 		            try {
-		                Log.d(TAG, "Sleeping for " + backoff + " ms before retry");
+		            	displayMessage(context, "Sleeping for " + backoff + " ms before retry");
 		                Thread.sleep(backoff);
 		            } catch (InterruptedException e1) {
 		                // Activity finished before we complete - exit.
-		                Log.d(TAG, "Thread interrupted: abort remaining retries!");
+		            	displayMessage(context, "Thread interrupted: abort remaining retries!");
 		                Thread.currentThread().interrupt();
 		                return false;
 		            }
@@ -690,22 +691,21 @@ public class AirBopServerUtilities {
 		        }
 		    }
 		    catch (SocketTimeoutException e) {
-		    	 Log.e(TAG, "Failed to register on attempt (timeout)" + i, e);
-		            displayMessage(context, String.format(
+		    		displayMessage(context, String.format(
 		            		AirBopStrings.airbop_server_reg_failed_timeout
 		            		, e.getMessage()));
 
 		            // Here we are going to retry on a timeout
-		            Log.e(TAG, "Failed to register on attempt " + i, e);
+		    		displayMessage(context, "Failed to register on attempt: " + i);
 		            if (i == MAX_ATTEMPTS) {
 		                break;
 		            }
 		            try {
-		                Log.d(TAG, "Sleeping for " + backoff + " ms before retry");
+		            	displayMessage(context, "Sleeping for " + backoff + " ms before retry");
 		                Thread.sleep(backoff);
 		            } catch (InterruptedException e1) {
 		                // Activity finished before we complete - exit.
-		                Log.d(TAG, "Thread interrupted: abort remaining retries!");
+		            	displayMessage(context, "Thread interrupted: abort remaining retries!");
 		                Thread.currentThread().interrupt();
 		                return false;
 		            }
@@ -714,7 +714,7 @@ public class AirBopServerUtilities {
 		    }
 		    catch (IOException e) {
 		    	// Probably caused by a 401 error code
-	            Log.e(TAG, "Failed to register on attempt " + i, e);
+	            //Log.e(TAG, "Failed to register on attempt " + i, e);
 	            displayMessage(context, String.format(
 	            		AirBopStrings.airbop_server_reg_failed_401
 	            		, e.getMessage()));
@@ -737,7 +737,7 @@ public class AirBopServerUtilities {
      */
     static boolean unregister(final Context context
 			, final String regId) {
-		Log.i(TAG, "unregistering device (regId = " + regId + ")");
+		//Log.i(TAG, "unregistering device (regId = " + regId + ")");
 		displayMessage(context, AirBopStrings.airbop_unregister_device);
 		String serverUrl = SERVER_URL + "unregister";
 		
@@ -759,13 +759,13 @@ public class AirBopServerUtilities {
 			// We could try to unregister again, but it is not necessary:
 			// if the server tries to send a message to the device, it will get
 			// a "NotRegistered" error message and should unregister the device.
-			Log.e(TAG, "Failed to unregister on attempt " + e);
+			//Log.e(TAG, "Failed to unregister on attempt " + e);
 			String message = String.format(AirBopStrings.airbop_server_unregister_error,
 					e.getMessage());
 			displayMessage(context, message);
 			return false;
 		}catch (AirBopException e) {
-			Log.e(TAG, "Failed to unregister on attempt " + e);
+			//Log.e(TAG, "Failed to unregister on attempt " + e);
 			String message = String.format(AirBopStrings.airbop_server_unregister_error,
 					e.getMessage());
 			displayMessage(context, message);

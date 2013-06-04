@@ -20,8 +20,8 @@ package com.airbop.library.simple;
 import static com.airbop.library.simple.CommonUtilities.displayMessage;
 import static com.airbop.library.simple.CommonUtilities.onGCMMessage;
 
-import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -33,7 +33,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
+//import android.util.Log;
 
 //import com.airbop.gcm.demo.R;
 //import com.airbop.client.DemoActivity;
@@ -71,7 +71,7 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onRegistered(Context context, String registrationId) {
     	
-        Log.i(TAG, "Device registered: regId = " + registrationId);
+        //Log.i(TAG, "Device registered: regId = " + registrationId);
         displayMessage(context, AirBopStrings.airbop_gcm_registered);
         //Get our data for the server
         AirBopServerUtilities server_data = AirBopServerUtilities.fillDefaults(registrationId);
@@ -91,7 +91,7 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onUnregistered(Context context, String registrationId) {
     	
-        Log.i(TAG, "Device unregistered");
+        //Log.i(TAG, "Device unregistered");
         displayMessage(context, AirBopStrings.airbop_gcm_unregistered);
         //If we are still registered with AirBop it is time to unregister
         if (GCMRegistrar.isRegisteredOnServer(context)) {
@@ -99,7 +99,7 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
         } else {
             // This callback results from the call to unregister made on
             // ServerUtilities when the registration to the server failed.
-        	Log.i(TAG, "Ignoring unregister callback");
+        	//Log.i(TAG, "Ignoring unregister callback");
         	
         }
     }
@@ -110,7 +110,7 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
 	@Override
 	protected void onMessage(Context context, Intent intent) {
 		
-	    Log.i(TAG, "Received message");
+	    //Log.i(TAG, "Received message");
 	    displayMessage(context, "Message Received" );
 	    String message = null;
 	    String title = null;
@@ -125,7 +125,7 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
 			if (airBop_settings.mDefaultNotificationHandling) {
 		 	   	if (bundle != null) {
 		 	   		displayMessage(context, "Message bundle: " +  bundle);
-		 	   		Log.i(TAG, "Message bundle: " +  bundle);
+		 	   		//Log.i(TAG, "Message bundle: " +  bundle);
 		 	   		message = bundle.getString("message");   			 	   		
 		 	   		title = bundle.getString("title");	
 		 	   		url = bundle.getString("url");	 	   		
@@ -157,7 +157,7 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
 		 * pending messages have been deleted because the
 		 * device was idle.
 		 */
-        Log.i(TAG, "Received deleted messages notification");
+        //Log.i(TAG, "Received deleted messages notification");
         String message = String.format(AirBopStrings.airbop_gcm_deleted, total);
         displayMessage(context, message);
         // notifies user
@@ -171,7 +171,7 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
     @Override
     public void onError(Context context, String errorId) {
     	
-        Log.i(TAG, "Received error: " + errorId);
+        //Log.i(TAG, "Received error: " + errorId);
         displayMessage(context, String.format(AirBopStrings.airbop_gcm_error, errorId));
     }
 
@@ -183,7 +183,7 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
     @Override
     protected boolean onRecoverableError(Context context, String errorId) {
     	// log message
-        Log.i(TAG, "Received recoverable error: " + errorId);
+        //Log.i(TAG, "Received recoverable error: " + errorId);
         displayMessage(context, String.format(AirBopStrings.airbop_gcm_recoverable_error,
                 errorId));
         return super.onRecoverableError(context, errorId);
@@ -241,10 +241,15 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-        		Log.i(TAG, "intent_class: " + intent_class);
+        		//Log.i(TAG, "intent_class: " + intent_class);
         	}
         }
-        Intent notificationIntent = new Intent(context, intent_class);
+        Intent notificationIntent = null;
+        if (intent_class != null){
+        	notificationIntent = new Intent(context, intent_class);
+        } else {
+        	notificationIntent = new Intent(Intent.ACTION_VIEW);
+        }
         // set intent so it does not start a new activity
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                 Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -274,12 +279,8 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
         //int icon = R.drawable.ic_stat_gcm;
     	AirBopManifestSettings airBop_settings = CommonUtilities.loadDataFromManifest(context);
          
-    	int icon = 0;
-        Resources res = context.getResources();
-        if (res != null) {
-        	//icon = res.getIdentifier(airBop_settings.mDefaultNotificationIcon, null, null);
-        	icon = airBop_settings.mNotificationIcon;
-        }
+    	int icon = airBop_settings.mNotificationIcon;
+        
         long when = System.currentTimeMillis();
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -303,6 +304,7 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
             		} catch (ClassNotFoundException e) {
     					// TODO Auto-generated catch block
     					e.printStackTrace();
+    					//notificationIntent = new Intent(Intent.ACTION_VIEW);
     				}
             	}
             }
@@ -313,26 +315,33 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
             notificationIntent.setData(Uri.parse(url));
             notificationIntent.addCategory(Intent.CATEGORY_BROWSABLE);
         }
-        
+        PendingIntent intent = null;
         // set intent so it does not start a new activity
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent intent =
-                PendingIntent.getActivity(context, 0, notificationIntent, 0);
+        if (notificationIntent != null) {
+        	notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+	                Intent.FLAG_ACTIVITY_SINGLE_TOP);
+	        intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+        }
         
-        Notification notification = new NotificationCompat.Builder(context)
+        
+        Builder notificationBuilder = new NotificationCompat.Builder(context)
 		        .setContentTitle(title)
 		        .setContentText(message)
-		        .setContentIntent(intent)
-		        .setSmallIcon(icon)
 		        .setLargeIcon(decodeImage(large_icon))
 		        .setWhen(when)
 		        .setStyle(new NotificationCompat.BigTextStyle()
-				    	.bigText(message))
-        	.build();
+				    	.bigText(message));
+        if (intent != null) {
+        	notificationBuilder.setContentIntent(intent);
+        }
+        if (icon != 0) {
+        	notificationBuilder.setSmallIcon(icon);
+        }
+        Notification notification = notificationBuilder.build();
         
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         notificationManager.notify(0, notification);
+       
     }
     
     private static void generateImageNotification(Context context
@@ -346,7 +355,7 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
     	Bitmap message_bitmap = null; 
     	// Should we download the image?
     	if ((image_url != null) && (!image_url.equals(""))) {
-    		message_bitmap = AirBopImageDownloader.downloadBitmap(image_url);
+    		message_bitmap = AirBopImageDownloader.downloadBitmap(image_url, context);
     	}
     	// If we didn't get the image, we're out of here
     	if (message_bitmap == null) {
@@ -359,12 +368,8 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
     	}
     	AirBopManifestSettings airBop_settings = CommonUtilities.loadDataFromManifest(context);
            	
-        int icon = 0;
-        Resources res = context.getResources();
-        if (res != null) {
-        	//icon = res.getIdentifier(airBop_settings.mDefaultNotificationIcon, null, null);
-        	icon = airBop_settings.mNotificationIcon;
-        }
+        int icon = airBop_settings.mNotificationIcon;
+        
         long when = System.currentTimeMillis();
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -397,24 +402,30 @@ public class AirBopGCMIntentService extends GCMBaseIntentService {
             notificationIntent.setData(Uri.parse(url));
             notificationIntent.addCategory(Intent.CATEGORY_BROWSABLE);
         }
-        
+        PendingIntent intent = null;
         // set intent so it does not start a new activity
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent intent =
-                PendingIntent.getActivity(context, 0, notificationIntent, 0);
-                
-        Notification notification = new NotificationCompat.Builder(context)
+        if (notificationIntent != null) {
+        	notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+	                Intent.FLAG_ACTIVITY_SINGLE_TOP);
+	        intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+        }
+        
+        Builder notificationBuilder = new NotificationCompat.Builder(context)
 		        .setContentTitle(title)
 		        .setContentText(message)
-		        .setContentIntent(intent)
-		        .setSmallIcon(icon)
 		        .setLargeIcon(decodeImage(large_icon))
 		        .setWhen(when)
 		        .setStyle(new NotificationCompat.BigPictureStyle()
-		        	.bigPicture(message_bitmap))
-	        .build();
-        
+			        	.bigPicture(message_bitmap));
+		if (intent != null) {
+			notificationBuilder.setContentIntent(intent);
+		}
+		if (icon != 0) {
+			notificationBuilder.setSmallIcon(icon);
+		}
+		Notification notification = notificationBuilder.build();
+	                
+	       
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         notificationManager.notify(0, notification);
     }

@@ -132,10 +132,7 @@ public class DemoActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        
-        //unregisterReceiver(mHandleMessageReceiver);
-    	//AirBop.unregisterAirBopMessageReceiver(this, mHandleAirBopMessageReceiver);
-    	AirBop.unregisterAirBopLogReceiver(this, mHandleLogMessageReceiver);
+        AirBop.unregisterAirBopLogReceiver(this, mHandleLogMessageReceiver);
         super.onDestroy();
     }
 
@@ -144,8 +141,11 @@ public class DemoActivity extends Activity {
             new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String newMessage = intent.getExtras().getString(EXTRA_MESSAGE);
-            mDisplay.append(newMessage + "\n");
+        	if (intent != null) {
+        		String newMessage = intent.getStringExtra(EXTRA_MESSAGE);
+        		Log.v(TAG, newMessage);
+        		mDisplay.append(newMessage + "\n");
+        	}
         }
     };
     

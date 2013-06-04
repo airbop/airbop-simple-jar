@@ -17,16 +17,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-
+//import android.util.Log;
+//
 public class AirBop implements AirBopRegisterTask.RegTaskCompleteListener, LocationListener {
 	
 	/*
@@ -109,8 +106,16 @@ public class AirBop implements AirBopRegisterTask.RegTaskCompleteListener, Locat
     			displayMessage(application_context, AirBopStrings.airbop_getting_location);
     			// We have to query the Location Manager for the location
     			// and get the result in onLocationChanged
-    			CommonUtilities.getCurrentLocation(this
-	    				, application_context);
+    			if (!CommonUtilities.getCurrentLocation(this
+	    				, application_context)) {
+    				//FAILED! GO WITHOUT LOCATION
+    				//Remove any old location data
+    	    		AirBopServerUtilities.clearLocationPrefs(application_context);
+    	    		//Save the label if it's there
+    	    		mServerData.saveCurrentDataToPrefs(application_context);
+    	    		//register
+    	    		internalRegister(application_context);
+    			}
     		} else {    			
     			//Save the data to the prefs
     			mServerData.mLocation = location;
@@ -133,14 +138,15 @@ public class AirBop implements AirBopRegisterTask.RegTaskCompleteListener, Locat
     private  void internalRegister(Context appContext) {	
      	
     	final String regId = GCMRegistrar.getRegistrationId(appContext);
-    	Log.v(TAG,"internalRegister regId: " + regId);
+    	//Log.v(TAG,"internalRegister regId: " + regId);
+    	displayMessage(appContext, "internalRegister regId: " + regId);
     	if (regId.equals("")) {
         	// We don't have a REG ID from GCM so let's ask for one. 
         	// The response from the GCM server will trigger: 
         	// GCMIntentService.onRegistered() where we will then register with
         	// AiRBop's servers.
     		displayMessage(appContext, AirBopStrings.airbop_gcm_register_attempt);
-    		Log.v(TAG,"mGoogleProjectNumber: " + mAirBopSettings.mGoogleProjectNumber);
+    		//Log.v(TAG,"mGoogleProjectNumber: " + mAirBopSettings.mGoogleProjectNumber);
     		GCMRegistrar.register(appContext, mAirBopSettings.mGoogleProjectNumber);
         } else {
         	

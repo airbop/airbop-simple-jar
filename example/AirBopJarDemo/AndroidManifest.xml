@@ -37,10 +37,10 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     
     <!-- Un-comment this if you want to be able to get the users location -->
-    <!--
+    
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> 
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> 
-	-->
+	
 	
     <!--
      Creates a custom permission so only this app can receive its messages.
@@ -66,14 +66,15 @@
         
          <!--  AirBop META DATA -->
     	<meta-data android:name="AIRBOP_GOOGLE_PROJECT_NUMBER" android:value="@string/gpn" />
-    	<meta-data android:name="AIRBOP_APP_KEY" android:value="<<YOUR_KEY>>" />
-    	<meta-data android:name="AIRBOP_APP_SECRET" android:value="<<YOUR_SECRET>>" />
-        <meta-data android:name="AIRBOP_USE_LOCATION" android:value="false" />
-        <meta-data android:name="AIRBOP_DEFAULT_NOTIFICATION_TITLE" android:value="AirBop Client" />
+    	<meta-data android:name="AIRBOP_APP_KEY" android:value="<<REPLACE_ME>>" />
+    	<meta-data android:name="AIRBOP_APP_SECRET" android:value="<<REPLACE_ME>>" />
         <meta-data android:name="AIRBOP_NOTIFICATION_ICON" android:resource="@drawable/ic_stat_gcm"/>
+        <!-- AirBop OPTIONAL META DATA --> 
+        <meta-data android:name="AIRBOP_USE_LOCATION" android:value="true" />
+        <meta-data android:name="AIRBOP_DEFAULT_NOTIFICATION_TITLE" android:value="AirBop Client" />
         <meta-data android:name="AIRBOP_DEFAULT_NOTIFICATION_CLASS" android:value="com.airbop.client.DemoActivity"/>
-		<meta-data android:name="AIRBOP_DEFAULT_NOTIFICATION_HANDLING" android:value="false"/>
-        
+      	<meta-data android:name="AIRBOP_DEFAULT_NOTIFICATION_HANDLING" android:value="true"/>
+
     	
         <activity
             android:name=".DemoActivity"

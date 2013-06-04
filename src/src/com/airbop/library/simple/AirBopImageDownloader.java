@@ -16,6 +16,8 @@ package com.airbop.library.simple;
  * limitations under the License.
  */
 
+import static com.airbop.library.simple.CommonUtilities.displayMessage;
+
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,14 +27,15 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.http.AndroidHttpClient;
-import android.util.Log;
+//import android.util.Log;
 
 public class AirBopImageDownloader {
 	
-	static public Bitmap downloadBitmap(String url) {
+	static public Bitmap downloadBitmap(String url, Context context) {
 	    final AndroidHttpClient client = AndroidHttpClient.newInstance("Android");
 	    final HttpGet getRequest = new HttpGet(url);
 
@@ -40,7 +43,7 @@ public class AirBopImageDownloader {
 	        HttpResponse response = client.execute(getRequest);
 	        final int statusCode = response.getStatusLine().getStatusCode();
 	        if (statusCode != HttpStatus.SC_OK) { 
-	            Log.w("ImageDownloader", "Error " + statusCode + " while retrieving bitmap from " + url); 
+	        	displayMessage(context, "Error " + statusCode + " while retrieving bitmap from " + url); 
 	            return null;
 	        }
 	        
@@ -61,7 +64,7 @@ public class AirBopImageDownloader {
 	    } catch (Exception e) {
 	        // Could provide a more explicit error message for IOException or IllegalStateException
 	        getRequest.abort();
-	        Log.w("ImageDownloader", "Error while retrieving bitmap from " + url + e.toString());
+	        displayMessage(context, "Error while retrieving bitmap from " + url + e.toString());
 	    } finally {
 	        if (client != null) {
 	            client.close();

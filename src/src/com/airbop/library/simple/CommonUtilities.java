@@ -36,7 +36,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
+//import android.util.Log;
 
 /**
  * Helper class providing methods and constants common to other classes in the
@@ -189,13 +189,15 @@ public final class CommonUtilities {
 	    	LocationManager locationManager = (LocationManager)appContext.getSystemService(Context.LOCATION_SERVICE);
 		    if (locationManager != null) {
 		    	String provider = locationManager.getBestProvider(criteria, true);
-			    location = locationManager.getLastKnownLocation(provider); 
-			    
-			    if (location != null) {
-			    	displayMessage(appContext
-			    			, String.format(AirBopStrings.airbop_got_last_location
-			    					, location.getLatitude()
-			    					, location.getLongitude()));
+			    if (provider != null) {
+			    	location = locationManager.getLastKnownLocation(provider); 
+				    
+				    if (location != null) {
+				    	displayMessage(appContext
+				    			, String.format(AirBopStrings.airbop_got_last_location
+				    					, location.getLatitude()
+				    					, location.getLongitude()));
+				    }
 			    }
 	    	}
     	}
@@ -217,11 +219,12 @@ public final class CommonUtilities {
 	    	LocationManager locationManager = (LocationManager)appContext.getSystemService(Context.LOCATION_SERVICE);
 		    if (locationManager != null) {
 		    	String provider = locationManager.getBestProvider(criteria, true);
-		    	
-	    		locationManager.requestLocationUpdates(provider, 2000, 10,
-	                    locationListener);    
-	    		// We've posted so let the caller know
-	    		return true;
+		    	if (provider != null) {
+		    		locationManager.requestLocationUpdates(provider, 2000, 10,
+		    				locationListener);    
+		    		// We've posted so let the caller know
+		    		return true;
+		    	}
 		    }
     	}
 	    // We couldn't get the location manager so let the caller know
@@ -253,55 +256,55 @@ public final class CommonUtilities {
     	AirBopManifestSettings airbop_settings = new AirBopManifestSettings();
     	
 		if (application_context != null) {
-			Log.v(TAG, "loadDataFromManifest: application_context != null");
+			//Log.v(TAG, "loadDataFromManifest: application_context != null");
 			ApplicationInfo ai;
 			try {
 				ai = application_context.getPackageManager().getApplicationInfo(
 						application_context.getPackageName(), PackageManager.GET_META_DATA);
 			
 				if (ai != null) {
-					Log.v(TAG, "loadDataFromManifest: ai != null");
-					Log.v(TAG, "application_context.getPackageName(): "
-							+ application_context.getPackageName());
+					//Log.v(TAG, "loadDataFromManifest: ai != null");
+					//Log.v(TAG, "application_context.getPackageName(): "
+					//		+ application_context.getPackageName());
 					Bundle app_bundle=ai.metaData;
 					if (app_bundle != null) {
-						Log.v(TAG, "app_bundle: "+ app_bundle);
+						//Log.v(TAG, "app_bundle: "+ app_bundle);
 						if (airbop_settings != null){
 							
-							Log.v(TAG, "app_bundle: airbop_settings != null");
+							//Log.v(TAG, "app_bundle: airbop_settings != null");
 							
 							airbop_settings.mGoogleProjectNumber = app_bundle.getString(AIRBOP_GOOGLE_PROJECT_NUMBER);
-							Log.v(TAG, "mGoogleProjectNumber: " + airbop_settings.mGoogleProjectNumber);
+							//Log.v(TAG, "mGoogleProjectNumber: " + airbop_settings.mGoogleProjectNumber);
 							
 							airbop_settings.mAirBopAppkey = 
 								app_bundle.getString(AIRBOP_APP_KEY);
-							Log.v(TAG, "mAirBopAppkey: " + airbop_settings.mAirBopAppkey);
+							//Log.v(TAG, "mAirBopAppkey: " + airbop_settings.mAirBopAppkey);
 							
 							airbop_settings.mAirBopAppSecret = 
 								app_bundle.getString(AIRBOP_APP_SECRET);
-							Log.v(TAG, "mAirBopAppSecret: " + airbop_settings.mAirBopAppSecret);
+							//Log.v(TAG, "mAirBopAppSecret: " + airbop_settings.mAirBopAppSecret);
 							
 							airbop_settings.mUseLocation = 
 								app_bundle.getBoolean(AIRBOP_USE_LOCATION, false);
-							Log.v(TAG, "mUseLocation: " + airbop_settings.mUseLocation);
+							//Log.v(TAG, "mUseLocation: " + airbop_settings.mUseLocation);
 							
 							airbop_settings.mDefaultNotificationTitle= 
 								app_bundle.getString(AIRBOP_DEFAULT_NOTIFICATION_TITLE);
-							Log.v(TAG, "mDefaultNotificationTitle: " + airbop_settings.mDefaultNotificationTitle);
+							//Log.v(TAG, "mDefaultNotificationTitle: " + airbop_settings.mDefaultNotificationTitle);
 							if (airbop_settings.mDefaultNotificationTitle == null){
 								airbop_settings.mDefaultNotificationTitle = "";
 							}
 							airbop_settings.mNotificationIcon= 
 								app_bundle.getInt(AIRBOP_NOTIFICATION_ICON);
-							Log.v(TAG, "mNotificationIcon: " + airbop_settings.mNotificationIcon);
+							//Log.v(TAG, "mNotificationIcon: " + airbop_settings.mNotificationIcon);
 							
 							airbop_settings.mDefaultNotificationClass= 
 								app_bundle.getString(AIRBOP_DEFAULT_NOTIFICATION_CLASS);
-							Log.v(TAG, "mDefaultNotificationClass: " + airbop_settings.mDefaultNotificationClass);
+							//Log.v(TAG, "mDefaultNotificationClass: " + airbop_settings.mDefaultNotificationClass);
 							
 							airbop_settings.mDefaultNotificationHandling = 
 								app_bundle.getBoolean(AIRBOP_DEFAULT_NOTIFICATION_HANDLING, true);
-							Log.v(TAG, "mDefaultNotificationHandling: " + airbop_settings.mDefaultNotificationHandling);
+							//Log.v(TAG, "mDefaultNotificationHandling: " + airbop_settings.mDefaultNotificationHandling);
 						}						
 					}
 				}

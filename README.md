@@ -103,28 +103,32 @@ The next step is to add all of the data that the simple jar needs to your manife
     
 Here are the items in greater detail:
 
-* `AIRBOP_GOOGLE_PROJECT_NUMBER` - Your Google Project Number. This should be a string resource, and within the string resource you should specify the actual number. e.g.
+* `AIRBOP_GOOGLE_PROJECT_NUMBER` (Required) Your Google Project Number. This should be a string resource, and within the string resource you should specify the actual number. e.g.
+
+		<meta-data android:name="AIRBOP_GOOGLE_PROJECT_NUMBER" android:value="@string/gpn" />
+		
+Which refers to the following string resource in a separete xml file:
 
         <string name="gpn">##########</string>
         
-* `AIRBOP_APP_KEY` - Your AirBop app key, found in airbop.com account.
+* `AIRBOP_APP_KEY` (Required) Your AirBop app key, found in airbop.com account.
 
-* `AIRBOP_APP_SECRET` = Your AirBop app secret, found in your airbop.com account.
+* `AIRBOP_APP_SECRET` (Required) Your AirBop app secret, found in your airbop.com account.
 
-* `AIRBOP_USE_LOCATION` value controls whether or not you want the users location data sent to AirBop. The default is false. If you set this to false AirBop will look up the devices location based on IP. If you set this to "true" the following permissions must be added to you manifest as well:
+* `AIRBOP_NOTIFICATION_ICON` (Required) This is the resource id of the icon that will be used in the notification.
+
+* `AIRBOP_DEFAULT_NOTIFICATION_CLASS` (Optional) If no URL is specified this is the activity that will be shown when the end-user clicks on the notification. E.g.:
+
+        <meta-data android:name="AIRBOP_DEFAULT_NOTIFICATION_CLASS" android:value="com.airbop.client.DemoActivity"/>
+
+* `AIRBOP_USE_LOCATION` (Optional) value controls whether or not you want the users location data sent to AirBop. The default is false. If you set this to false AirBop will look up the devices location based on IP. If you set this to "true" the following permissions must be added to you manifest as well:
 
     	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> 
     	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> 
     	
-* `AIRBOP_DEFAULT_NOTIFICATION_TITLE` Controls the default title for notifications if none is passed in within the message. This is optional and will default to a blank string.
+* `AIRBOP_DEFAULT_NOTIFICATION_TITLE` (Optional) Controls the default title for notifications if none is passed in within the message. This is optional and will default to a blank string.
 
-* `AIRBOP_NOTIFICATION_ICON` This is the resource id of the icon that will be used in the notification.
-
-* `AIRBOP_DEFAULT_NOTIFICATION_CLASS` If no URL is specified this is the activity that will be shown when the end-user clicks on the notification. E.g.:
-
-        <meta-data android:name="AIRBOP_DEFAULT_NOTIFICATION_CLASS" android:value="com.airbop.client.DemoActivity"/>
-
-* `AIRBOP_DEFAULT_NOTIFICATION_HANDLING` Whether or not the airbop.jar should handle the notification creation. This defaults to true. If false no notification will be displayed when a message from AirBop is received. You will have to create your own handler to perform any actions. More information on this can be found in the *Custom Message Handling* section.
+* `AIRBOP_DEFAULT_NOTIFICATION_HANDLING` (Optional) Whether or not the airbop.jar should handle the notification creation. This defaults to true. If false no notification will be displayed when a message from AirBop is received. You will have to create your own handler to perform any actions. More information on this can be found in the *Custom Message Handling* section.
    
 ### 4. Register with AirBop and GCM
   
@@ -188,6 +192,62 @@ You can let the simple JAR handle all of the messaging and notification for you,
             </receiver>
 
 *    That's it.
+
+### Gettind debug information
+
+If you want to have access to the error and status messages created by the simple jar you will need to register a BroadcastReceiver with the jar, and then process the message in `OnReceive`. This is a rather simple procedure that can be done from your main activity:
+
+    private final BroadcastReceiver mHandleLogMessageReceiver =
+            new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+        	if (intent != null) {
+        		String newMessage = intent.getStringExtra(EXTRA_MESSAGE);
+        		Log.v(TAG, newMessage);
+        		mDisplay.append(newMessage + "\n");
+        	}
+        }
+    };
+    
+Then in your Activities `onCreate` call `AirBop.registerAirBopLogReceiver` and then register your receiver:
+
+    AirBop.registerAirBopLogReceiver(this, mHandleLogMessageReceiver);
+    
+Finally in `onDestroy` you will need to unregister your receiver:
+
+    @Override
+    protected void onDestroy() {
+    	AirBop.unregisterAirBopLogReceiver(this, mHandleLogMessageReceiver);
+    	super.onDestroy();
+    }
+    
+### Supported JSON variables
+
+The simple jar supports the following JSON data:
+
+* title - The title for your message, which will be displayed in the notification area. 
+* message - The main text that will appear in the notification area.
+* url - The URL that you want to display to your end users when they click on the notification.
+* image_url - The URL of the image that will be downloaded and used in the notification, as described here: [Tutorial: Using AirBop to Push Images for BigPictureStyle Notifications](http://blog.andromo.com/2012/tutorial-using-airbop-to-push-images-for-bigpicturestyle-notifications/).
+* large_icon - A Base64 encoded image that will serve as the large icon for the notification, as described here: [Tutorial: Using AirBop to Send Images in the Message Payload](http://blog.andromo.com/2012/tutorial-using-airbop-to-send-images-in-the-message-payload/).
+
+#### Large Icon Example JSON
+
+    {
+        "title": "AirBop",
+        "message": "Mark has sent you a message from AirBop",
+        "url": "http://www.airbop.com",
+        "large_icon" : "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"
+    }
+
+#### Image URL Example JSON
+
+    {
+        "title": "AirBop",
+        "message": "Here is your BigPictureStyle notification",
+        "url": "http://www.airbop.com",
+        "image_url" : "http://blog.andromo.com/wp-content/uploads/2012/12/a.1003-small-size.jpg"
+    }
 
 ### Building the jar from source.
 
