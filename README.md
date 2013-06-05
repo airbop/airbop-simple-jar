@@ -1,4 +1,4 @@
-AirBop-simple-jar BETA
+AirBop-simple-jar v0.0.1 BETA
 =================
 
 *NOTE:* This jar is in the BETA stage and should only be used for testing purposes. Feel free to test the jar, and let us know if you encounter any issues. The code for the jar is available so you will be able to fix bugs you encounter.
