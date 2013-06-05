@@ -1,15 +1,19 @@
 AirBop-simple-jar BETA
 =================
 
-WARNING: This is in the BETA stage so use at your own risk. There will be bugs.
+*NOTE:* This jar is in the BETA stage and should only be used for testing purposes. Feel free to test the jar, and let us know if you encounter any issues. The code for the jar is available so you will be able to fix bugs you encounter.
 
-This is a simple jar to make adding AirBop to your app much easier.
+## Introduction
+
+This is a simple jar aimed at make adding AirBop to your app much easier. The goal of this jar is to wrap the most common AirBop functionality and make adding support for AirBop nothing more than the addition of a few lines of code.
+
+For an example implementation please see the [AirBopJarDemo]( https://github.com/indigorose/airbop-simple-jar/tree/master/example) project included in this repository.
 
 ## How to add the simple JAR to your app
 
 ### 1. Get the JARS that you need
 
-In order to use the AirBop simple jar you need to add the airbop.jar and gcm.jar to you app. These two jars can be found in the jars folder of our [GitHub repository](https://github.com/indigorose/airbop-simple-jar/tree/master/jars).
+In order to use the AirBop simple jar you need to add the airbop.jar and gcm.jar to your app. These two jars can be found in the jars folder of our [GitHub repository](https://github.com/indigorose/airbop-simple-jar/tree/master/jars).
 
 Download both of the jars and then put them in the `libs` folder of your project.
 
@@ -86,7 +90,7 @@ You will notice if you have worked with GCM or AirBop without using the simple J
                 <service android:name="com.airbop.library.simple.AirBopGCMIntentService" />
                 <service android:name="com.airbop.library.simple.AirBopIntentService"></service>
                 
-These lines tell GCM to use the airbop.jar for some of the basic GCM task, rather than looking for the hooks within your app.
+These lines tell GCM to use the airbop.jar for the majority of the basic GCM tasks, rather than looking for the hooks within your app.
 
 ### 3. Add the AirBop simple jar meta-data to your Android.xml manifest
 
@@ -107,7 +111,7 @@ Here are the items in greater detail:
 
 		<meta-data android:name="AIRBOP_GOOGLE_PROJECT_NUMBER" android:value="@string/gpn" />
 		
-Which refers to the following string resource in a separete xml file:
+Which refers to the following string resource in a separate xml file:
 
         <string name="gpn">##########</string>
         
@@ -115,7 +119,7 @@ Which refers to the following string resource in a separete xml file:
 
 * `AIRBOP_APP_SECRET` (Required) Your AirBop app secret, found in your airbop.com account.
 
-* `AIRBOP_NOTIFICATION_ICON` (Required) This is the resource id of the icon that will be used in the notification.
+* `AIRBOP_NOTIFICATION_ICON` (Required) The resource id of the icon that will be used in the notification.
 
 * `AIRBOP_DEFAULT_NOTIFICATION_CLASS` (Optional) If no URL is specified this is the activity that will be shown when the end-user clicks on the notification. E.g.:
 
@@ -128,7 +132,7 @@ Which refers to the following string resource in a separete xml file:
     	
 * `AIRBOP_DEFAULT_NOTIFICATION_TITLE` (Optional) Controls the default title for notifications if none is passed in within the message. This is optional and will default to a blank string.
 
-* `AIRBOP_DEFAULT_NOTIFICATION_HANDLING` (Optional) Whether or not the airbop.jar should handle the notification creation. This defaults to true. If false no notification will be displayed when a message from AirBop is received. You will have to create your own handler to perform any actions. More information on this can be found in the *Custom Message Handling* section.
+* `AIRBOP_DEFAULT_NOTIFICATION_HANDLING` (Optional) Whether or not the airbop.jar should handle the notification creation. This defaults to true. If false no notification will be displayed when a message from AirBop is received. You will have to create your own handler to perform any actions. More information on this can be found in the *Custom Message Handling* section below.
    
 ### 4. Register with AirBop and GCM
   
@@ -139,7 +143,7 @@ The next step is to register with GCM. A good place to do this would be in the `
         
 ### 5. Unregister with AirBop and GCM
 
-Finally you should allow people to opt-out of your notification, if that event you will need to call the following code:
+Finally you should allow people to opt-out of your notifications and unregister, in that event you will need to call the following code:
 
     AirBop mAirBop = new AirBop();
     mAirBop.unRegister(getApplicationContext());
@@ -157,7 +161,7 @@ If you are confused at all please see the sample location within the `example/Ai
 
 ## Custom Message Handling
 
-You can let the simple JAR handle all of the messaging and notification for you, or you block the default handling and do everything manually. Here is how you do it:
+You can let the simple JAR handle all of the messaging and notification for you, or you can block the default handling and do everything manually. Here is how  can handle the messaging manually:
 
 *    Block the default message handling via the Android.xml manifest file:
  
@@ -191,7 +195,7 @@ You can let the simple JAR handle all of the messaging and notification for you,
             		</intent-filter>
             </receiver>
 
-*    That's it.
+*    That's it all the work of handling the message will happen in your ` onReceive` method.
 
 ### Getting debug information
 
@@ -223,7 +227,7 @@ Finally in `onDestroy` you will need to unregister your receiver:
     
 ### Supported JSON variables
 
-The simple jar supports the following JSON data:
+The simple jar supports the following JSON data out of the box:
 
 * title - The title for your message, which will be displayed in the notification area. 
 * message - The main text that will appear in the notification area.
@@ -248,6 +252,17 @@ The simple jar supports the following JSON data:
         "url": "http://www.airbop.com",
         "image_url" : "http://blog.andromo.com/wp-content/uploads/2012/12/a.1003-small-size.jpg"
     }
+    
+### More Information
+
+For more inforamtion please see the following tutorials and help files:
+
+* [How does Google Cloud Messaging work?](http://support.airbop.com/kb/faq/how-does-google-cloud-messaging-work)
+* [Getting started with AirBop](http://airbop.com/tutorials/getting-started-with-airbop-gcm)
+* [Adding AirBop to your app](http://airbop.com/tutorials/adding-airbop-to-your-app)
+* [Sample airbop-client project](https://github.com/indigorose/airbop-client)
+* [Using AirBop to Push Images for BigPictureStyle Notifications](http://blog.andromo.com/2012/tutorial-using-airbop-to-push-images-for-bigpicturestyle-notifications/)
+* [Using AirBop to Send Images in the Message Payload](http://blog.andromo.com/2012/tutorial-using-airbop-to-send-images-in-the-message-payload/)
 
 ### Building the jar from source.
 
